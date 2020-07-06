@@ -2,12 +2,17 @@ package com.senzing.g2loader;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonString;
+import javax.json.JsonValue;
 import javax.json.JsonObjectBuilder;
+
 
 import com.senzing.g2.engine.Result;
 import com.senzing.g2.engine.G2Engine;
@@ -134,6 +139,27 @@ public class G2LoaderHandler {
 		  g2Engine.reinitV2(configID.getValue());
 	  }
 	  
+	  protected void addRecord(String record) throws Exception {
+		  JsonObject jsonRecord = Json.createReader(new StringReader(record)).readObject();
+		  
+		  JsonValue value = (JsonValue)jsonRecord.get("RECORD_ID");
+		  if (value == null || value.getValueType() != JsonValue.ValueType.STRING)
+	    	  throw new Exception("RECORD_ID not populated in JSON record");
+		  String recordID = ((JsonString)value).getString();
+
+		  value = jsonRecord.get("DATA_SOURCE");
+		  if (value == null || value.getValueType() != JsonValue.ValueType.STRING)
+	    	  throw new Exception("DATA_SOURCE not populated in JSON record");
+		  String dataSource = ((JsonString)value).getString();
+
+		  
+	      if (0 != g2Engine.addRecord(dataSource, recordID, record, null)) {
+		      StringBuilder errorMessage = new StringBuilder("G2Engine failed to addRecord with error: ");
+		      errorMessage.append(g2ErrorMessage(g2Engine));
+		      throw new Exception(errorMessage.toString());
+	      }
+	  }
+	  
 	  protected void addDataSource(String dataSource) throws Exception {
 	    	int result = 0;
 	    	
@@ -186,6 +212,11 @@ public class G2LoaderHandler {
 		    response = new StringBuffer();
 
 		    result = g2Config.addDataSourceV2(configHandle, cmd, response);
+
+		    cmd = "{\"ETYPE_CODE\": \"" + dataSource + "\",\"ECLASS_CODE\": \"ACTOR\"}";
+		    response = new StringBuffer();
+
+		    result = g2Config.addEntityTypeV2(configHandle, cmd, response);
 
 		    if(result==0) {
 			    response = new StringBuffer();

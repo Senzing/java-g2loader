@@ -6,11 +6,26 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import org.apache.commons.io.input.BOMInputStream;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.csv.CSVFormat;
+
+
 import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
+
+import javax.json.Json;
+import javax.json.JsonObjectBuilder;
 
 import com.senzing.g2loader.config.AppConfiguration;
 import com.senzing.g2loader.config.ConfigKeys;
@@ -44,7 +59,7 @@ public class G2Loader {
 	      value = configValues.get(CommandOptions.DATA_FILE);
 	      if (null != value){
 	    	  System.out.println("Loading dataFile");
-	    	  loadFile(value.toString());
+	    	  loadFile(handler, value.toString());
 	      }
 
 	      
@@ -62,9 +77,91 @@ public class G2Loader {
 
 	}
 	
-	private static void loadFile(String dataFile) throws Exception {
-
+	private static boolean isJsonFile(String dataFile) throws Exception {
+		
+		
+		try (FileInputStream input = new FileInputStream(dataFile); BufferedReader reader = new BufferedReader(new InputStreamReader(input));){
+			String line = reader.readLine();
+			Json.createReader(new StringReader(line)).readObject();
+			return true;
+		} catch (Exception e) {
+		}
+		
+		return false;
 	}
+	
+	private static void loadFile(G2LoaderHandler handler, String dataFile) throws Exception {
+		if (isJsonFile(dataFile)) {
+			loadJsonFile(handler,dataFile);
+		} else {
+			loadCsvFile(handler,dataFile);
+		}
+	}
+	
+	private static void loadJsonFile(G2LoaderHandler handler, String dataFile) throws Exception {
+	    long start = System.currentTimeMillis();
+
+        final AtomicInteger total = new AtomicInteger(0);
+        final AtomicInteger failed = new AtomicInteger(0);
+        
+		try (FileInputStream input = new FileInputStream(dataFile); Stream<String> lines = new BufferedReader(new InputStreamReader(input)).lines()) {
+            lines.forEach(line -> {
+                        try {
+                            total.incrementAndGet();
+                            handler.addRecord(line);
+                        } catch (Exception e) {
+                            System.err.println("FAILED: [" + e.getMessage() + "] "+ line);
+                            failed.incrementAndGet();
+                        }
+                    });
+        }
+		long took = System.currentTimeMillis() - start;
+        String msg = "Parsed " + total.get() + " lines with " + failed.get() + " failures. Took " + took + "ms";
+        System.out.println(msg);
+        if (failed.get() > 0)
+        	throw new Exception(msg);
+	}
+	
+	private static String CSVtoJson(CSVRecord record, List<String> headers) {
+	    JsonObjectBuilder jsonRec = Json.createObjectBuilder();
+
+	        int i=0;
+	        for (String key : headers) {
+	            jsonRec.add(key,record.get(i));
+	            
+	            i++;
+	        }
+
+	    return jsonRec.build().toString();
+		
+	}
+
+	private static void loadCsvFile(G2LoaderHandler handler, String dataFile) throws Exception {
+	    long start = System.currentTimeMillis();
+
+        final AtomicInteger total = new AtomicInteger(0);
+        final AtomicInteger failed = new AtomicInteger(0);
+        
+		try (InputStreamReader reader = new InputStreamReader(new BOMInputStream(new FileInputStream(dataFile)), "UTF-8"); CSVParser parser = new CSVParser(reader, CSVFormat.EXCEL.withHeader());) {
+			List<String> headers = parser.getHeaderNames();
+			for (final CSVRecord record : parser) {
+				String line = CSVtoJson(record,headers);
+                        try {
+                            total.incrementAndGet();
+                            handler.addRecord(line);
+                        } catch (Exception e) {
+                            System.err.println("FAILED: [" + e.getMessage() + "] "+ line);
+                            failed.incrementAndGet();
+                        }
+            }
+        }
+		long took = System.currentTimeMillis() - start;
+        String msg = "Parsed " + total.get() + " lines with " + failed.get() + " failures. Took " + took + "ms";
+        System.out.println(msg);
+        if (failed.get() > 0)
+        	throw new Exception(msg);
+	}
+
 
 	private static void processConfiguration() {
 	    try {
