@@ -1,8 +1,13 @@
 package com.senzing.g2loader;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.io.IOException;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,6 +26,8 @@ import com.senzing.g2.engine.G2Config;
 import com.senzing.g2.engine.G2ConfigJNI;
 import com.senzing.g2.engine.G2ConfigMgr;
 import com.senzing.g2.engine.G2ConfigMgrJNI;
+import com.senzing.g2.engine.G2Diagnostic;
+import com.senzing.g2.engine.G2DiagnosticJNI;
 
 public class G2LoaderHandler {
 	  protected G2Engine g2Engine;
@@ -160,6 +167,64 @@ public class G2LoaderHandler {
 	      }
 	  }
 	  
+	  protected void exportToFile(String outFile) throws Exception {
+		  //int flags = g2Engine.G2_EXPORT_INCLUDE_ALL_ENTITIES;
+		  //int flags = -1;
+		  int flags = (G2Engine.G2_ENTITY_DEFAULT_FLAGS | G2Engine.G2_EXPORT_INCLUDE_ALL_ENTITIES | G2Engine.G2_EXPORT_INCLUDE_ALL_RELATIONSHIPS);
+
+		  long exportHandle = g2Engine.exportJSONEntityReport(flags);
+		  Writer outWriter = new OutputStreamWriter(new FileOutputStream(outFile,false), StandardCharsets.UTF_8);
+
+		  String response = g2Engine.fetchNext(exportHandle);
+		  while (response != null) {
+			  outWriter.write(response);
+			  response = g2Engine.fetchNext(exportHandle);
+		  }
+		  		  
+		  g2Engine.closeExport(exportHandle);
+		  outWriter.close();
+	  }
+
+	  protected void statsToFile(String statsFile) throws Exception {
+		  G2DiagnosticJNI g2Diag = new G2DiagnosticJNI();
+		  int result = g2Diag.initV2(moduleName, configData, verboseLogging);
+		  if (result != 0) {
+			      StringBuilder errorMessage = new StringBuilder("G2Diagnostic failed to initalize with error: ");
+			      errorMessage.append(g2ErrorMessage(g2Diag));
+			      throw new Exception(errorMessage.toString());
+		    }
+
+		  BufferedWriter outWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(statsFile,false), StandardCharsets.UTF_8));
+
+		  StringBuffer response = new StringBuffer();
+		  result = g2Diag.getDataSourceCounts(response);
+
+		  if (result != 0) {
+		      StringBuilder errorMessage = new StringBuilder("G2Diagnostic failed to getDataSourceCounts with error: ");
+		      errorMessage.append(g2ErrorMessage(g2Diag));
+		      outWriter.close();
+		      throw new Exception(errorMessage.toString());
+	    }
+		  
+		  outWriter.write(response.toString());
+		  outWriter.newLine();
+
+		  response = new StringBuffer();
+		  result = g2Diag.getResolutionStatistics(response);
+
+		  if (result != 0) {
+		      StringBuilder errorMessage = new StringBuilder("G2Diagnostic failed to getResolutionStatistics with error: ");
+		      errorMessage.append(g2ErrorMessage(g2Diag));
+		      outWriter.close();
+		      throw new Exception(errorMessage.toString());
+	    }
+		  
+		  outWriter.write(response.toString());
+		  outWriter.newLine();
+
+		  outWriter.close();
+	  }
+
 	  protected void addDataSource(String dataSource) throws Exception {
 	    	int result = 0;
 	    	
@@ -259,6 +324,9 @@ public class G2LoaderHandler {
 		    return g2.getLastExceptionCode() + ", " + g2.getLastException();
 		  }
 	  static protected String g2ErrorMessage(G2ConfigMgr g2) {
+		    return g2.getLastExceptionCode() + ", " + g2.getLastException();
+		  }
+	  static protected String g2ErrorMessage(G2Diagnostic g2) {
 		    return g2.getLastExceptionCode() + ", " + g2.getLastException();
 		  }
 

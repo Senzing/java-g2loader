@@ -62,6 +62,18 @@ public class G2Loader {
 	    	  loadFile(handler, value.toString());
 	      }
 
+	      value = configValues.get(CommandOptions.EXPORT_FILE);
+	      if (null != value){
+	    	  System.out.println("Exporting");
+	    	  handler.exportToFile(value.toString());
+	      }
+
+	      value = configValues.get(CommandOptions.STATS_FILE);
+	      if (null != value){
+	    	  System.out.println("Generating statistics");
+	    	  handler.statsToFile(value.toString());
+	      }
+
 	      
 	      
 	      handler.cleanUp();
@@ -179,6 +191,8 @@ public class G2Loader {
 	    // Add options.
 	    options.addOption(CommandOptions.INI_FILE, true, "Path to the G2 ini file");
 	    options.addOption(CommandOptions.DATA_FILE, true, "CSV or JSON data file to load");
+	    options.addOption(CommandOptions.EXPORT_FILE, true, "File path for export");
+	    options.addOption(CommandOptions.STATS_FILE, true, "File path for statistics");
 	    options.addOption(CommandOptions.DATA_SOURCE, true, "Data source for file");
 	    options.addOption(CommandOptions.PURGE, false, "Purge the repository");
 	    options.addOption(CommandOptions.VERBOSE, false, "Debug");
@@ -189,6 +203,8 @@ public class G2Loader {
 
 	    addCommandLineValue(commandLine, CommandOptions.INI_FILE);
 	    addCommandLineValue(commandLine, CommandOptions.DATA_FILE);
+	    addCommandLineValue(commandLine, CommandOptions.EXPORT_FILE);
+	    addCommandLineValue(commandLine, CommandOptions.STATS_FILE);
 	    addCommandLineValue(commandLine, CommandOptions.DATA_SOURCE);
 	    addCommandLineValue(commandLine, CommandOptions.PURGE);
 	    addCommandLineValue(commandLine, CommandOptions.VERBOSE);
@@ -225,6 +241,8 @@ public class G2Loader {
 	    System.out.println("Set the configuration in the g2loader.properties or add command line parameters.");
 	    System.out.println("Command line usage: java -jar g2loader.jar -iniFile <path to ini file> \\");
 	    System.out.println("                                          [-dataFile <path to data file>] \\");
+	    System.out.println("                                          [-exportToFile <path for export file>] \\");
+	    System.out.println("                                          [-statsToFile <path for statistics file>] \\");
 	    System.out.println("                                          [-dataSource <name of data source>] \\");
 	    System.out.println("                                          [-purge]  ");
 	    System.out.println("                                          [-debug]");
