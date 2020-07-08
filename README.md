@@ -10,8 +10,6 @@ This demonstration shows...
 
 ### Contents
 
-1. [Preamble](#preamble)
-    1. [Legend](#legend)
 1. [Related artifacts](#related-artifacts)
 1. [Expectations](#expectations)
 1. [Demonstrate using Command Line Interface](#demonstrate-using-command-line-interface)
@@ -29,26 +27,6 @@ This demonstration shows...
 1. [Errors](#errors)
 1. [References](#references)
 
-## Preamble
-
-At [Senzing](http://senzing.com),
-we strive to create GitHub documentation in a
-"[don't make me think](https://github.com/Senzing/knowledge-base/blob/master/WHATIS/dont-make-me-think.md)" style.
-For the most part, instructions are copy and paste.
-Whenever thinking is needed, it's marked with a "thinking" icon :thinking:.
-Whenever customization is needed, it's marked with a "pencil" icon :pencil2:.
-If the instructions are not clear, please let us know by opening a new
-[Documentation issue](https://github.com/Senzing/template-python/issues/new?template=documentation_request.md)
-describing where we can improve.   Now on with the show...
-
-### Legend
-
-1. :thinking: - A "thinker" icon means that a little extra thinking may be required.
-   Perhaps there are some choices to be made.
-   Perhaps it's an optional step.
-1. :pencil2: - A "pencil" icon means that the instructions may need modification before performing.
-1. :warning: - A "warning" icon means that something tricky is happening, so pay attention.
-
 ## Related artifacts
 
 ## Expectations
@@ -56,7 +34,7 @@ describing where we can improve.   Now on with the show...
 - **Space:** This repository and demonstration require 6 GB free disk space.
 - **Time:** Budget 40 minutes to get the demonstration up-and-running, depending on CPU and network speeds.
 - **Background knowledge:** This repository assumes a working knowledge of:
-  - [Docker](https://github.com/Senzing/knowledge-base/blob/master/WHATIS/docker.md)
+  - Java, mvn
 
 ## Demonstrate using Command Line Interface
 
