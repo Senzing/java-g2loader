@@ -11,10 +11,6 @@ This is a simple Java application that leverages the Senzing API to allow:
  
 ## Overview
 
-macOS:
-  1. Requires a user install of Java and will not work with a system installation
-  1. export DYLD_LIBRARY_PATH=<path>/senzing/g2/lib
-
 Command line usage: java -jar g2loader.jar -iniFile <path to ini file> \
                                           [-dataFile <path to data file>] \
                                           [-exportToFile <path for export file>] \
@@ -23,6 +19,10 @@ Command line usage: java -jar g2loader.jar -iniFile <path to ini file> \
                                           [-purge]
                                           [-debug]
     
+macOS:
+  1. Requires a user install of Java and will not work with a system installation
+  1. export DYLD_LIBRARY_PATH=<path>/senzing/g2/lib
+
 
 ### Contents
 
