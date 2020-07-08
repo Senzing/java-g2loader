@@ -1,4 +1,3 @@
-
 .classpath
 .project
 .settings/*
@@ -9,4 +8,4 @@ g2stats.json
 *.class
 *.jar
 *.swp
-
+.DS_Store
