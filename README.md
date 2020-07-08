@@ -11,13 +11,7 @@ This is a simple Java application that leverages the Senzing API to allow:
  
 ## Overview
 
-Command line usage: java -jar g2loader.jar -iniFile <path to ini file> \
-                                          [-dataFile <path to data file>] \
-                                          [-exportToFile <path for export file>] \
-                                          [-statsToFile <path for statistics file>] \
-                                          [-dataSource <name of data source>] \
-                                          [-purge]
-                                          [-debug]
+Command line usage: java -jar g2loader.jar -iniFile <path to ini file> [-dataFile <path to data file>] [-exportToFile <path for export file>] [-statsToFile <path for statistics file>] [-dataSource <name of data source>] [-purge] [-debug]
     
 macOS:
   1. Requires a user install of Java and will not work with a system installation
