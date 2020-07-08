@@ -31,6 +31,7 @@ In order to install `g2.jar` you must:
 
     1. Linux and MacOS:
 
+        ```
         mvn install:install-file \
             -Dfile=${SENZING_PROJECT_DIR}/lib/g2.jar \
             -DgroupId=com.senzing \
@@ -41,7 +42,7 @@ In order to install `g2.jar` you must:
 
     1. Windows:
 
-
+        ```
         mvn install:install-file \
             -Dfile="%SENZING_PROJECT_DIR%\lib\g2.jar" \
             -DgroupId=com.senzing \
