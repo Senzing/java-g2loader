@@ -78,29 +78,11 @@ describing where we can improve.   Now on with the show...
 
 ### Run command
 
-## Demonstrate using Docker
-
-### Prerequisites for Docker
-
-### Docker volumes
-
-### Docker network
-
-### Docker user
-
-### Database support
-
-### External database
-
-### Run Docker container
-
 ## Develop
 
 ### Prerequisites for development
 
 ### Clone repository
-
-### Build Docker image
 
 ## Examples
 
@@ -108,11 +90,6 @@ describing where we can improve.   Now on with the show...
 
 The following examples require initialization described in
 [Demonstrate using Command Line Interface](#demonstrate-using-command-line-interface).
-
-### Examples of Docker
-
-The following examples require initialization described in
-[Demonstrate using Docker](#demonstrate-using-docker).
 
 ## Advanced
 
