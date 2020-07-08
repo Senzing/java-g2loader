@@ -1,0 +1,12 @@
+
+.classpath
+.project
+.settings/*
+bin/*
+target/*
+g2export.json
+g2stats.json
+*.class
+*.jar
+*.swp
+
