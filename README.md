@@ -2,11 +2,27 @@
 
 ## Synopsis
 
-This section should give 4-5 sentences on what the artifacts in this repository do.
-
+This is a simple Java application that leverages the Senzing API to allow:
+ 1. loading CSV/JSON files
+ 1. purging repositories
+ 1. exporting results in JSON format
+ 1. exporting statistics in JSON format
+ 1. adding data sources
+ 
 ## Overview
 
-This demonstration shows...
+macOS:
+  1. Requires a user install of Java and will not work with a system installation
+  1. export DYLD_LIBRARY_PATH=<path>/senzing/g2/lib
+
+Command line usage: java -jar g2loader.jar -iniFile <path to ini file> \
+                                          [-dataFile <path to data file>] \
+                                          [-exportToFile <path for export file>] \
+                                          [-statsToFile <path for statistics file>] \
+                                          [-dataSource <name of data source>] \
+                                          [-purge]
+                                          [-debug]
+    
 
 ### Contents
 
