@@ -36,7 +36,7 @@ In order to install `g2.jar` you must:
             -Dfile=${SENZING_PROJECT_DIR}/lib/g2.jar \
             -DgroupId=com.senzing \
             -DartifactId=g2 \
-            -Dversion=unknown \
+            -Dversion=2.0.0 \
             -Dpackaging=jar
         ```
 
@@ -47,7 +47,7 @@ In order to install `g2.jar` you must:
             -Dfile="%SENZING_PROJECT_DIR%\lib\g2.jar" \
             -DgroupId=com.senzing \
             -DartifactId=g2 \
-            -Dversion="unknown" \
+            -Dversion="2.0.0" \
             -Dpackaging=jar
         ```
 
