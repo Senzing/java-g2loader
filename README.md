@@ -74,7 +74,7 @@ Follow the instructions in the QuickStart above and source the setupEnv
 NOTE: Requires a user install of Java and will not work with a system installation
 
     ```console
-    export DYLD_LIBRARY_PATH=${SENZING_PROJECT_DIR}/lib
+    export DYLD_LIBRARY_PATH=${SENZING_PROJECT_DIR}/lib:${SENZING_PROJECT_DIR}/lib/macos
     ```
 
 
